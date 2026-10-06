@@ -1,49 +1,14 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>부동산 계산기 10종 | 매매·전세·대출·세금</title>
-<meta name="description" content="주택 매매자금, 취득세, 전세자금, LTV, DTI, DSR, 중개보수, 재산세, 청약자금, 월 상환금을 계산해보세요.">
-<link rel="stylesheet" href="style.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>부동산 계산기 10종</title><link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="hero">
-  <div class="hero-inner">
-    <div class="eyebrow">REAL ESTATE FINANCE</div>
-    <h1>부동산 계산기 <strong>10종</strong></h1>
-    <p>매매·전세·대출·세금에 필요한 금액을 한곳에서 계산하세요.</p>
-  </div>
-</header>
-
-<main class="wrap">
-  <section class="grid">
-    <article class="card c1"><div class="num">01</div><h2>주택 매매 자금계획</h2><p>집값과 보유 현금, 대출을 입력해 추가로 필요한 자금을 확인합니다.</p><button onclick="openCalc(0)">계산하기 →</button></article>
-    <article class="card c2"><div class="num">02</div><h2>취득세</h2><p>주택 가격과 취득세율을 입력해 예상 취득세를 확인합니다.</p><button onclick="openCalc(1)">계산하기 →</button></article>
-    <article class="card c3"><div class="num">03</div><h2>전세자금</h2><p>전세보증금과 대출금, 금리를 입력해 자기자금과 월 이자를 확인합니다.</p><button onclick="openCalc(2)">계산하기 →</button></article>
-    <article class="card c4"><div class="num">04</div><h2>LTV</h2><p>주택가격과 LTV 비율을 입력해 담보대출 한도를 계산합니다.</p><button onclick="openCalc(3)">계산하기 →</button></article>
-    <article class="card c5"><div class="num">05</div><h2>DTI</h2><p>연소득과 연간 부채상환액을 입력해 DTI를 계산합니다.</p><button onclick="openCalc(4)">계산하기 →</button></article>
-    <article class="card c6"><div class="num">06</div><h2>DSR</h2><p>연소득 대비 연간 총 원리금 상환액 비율을 계산합니다.</p><button onclick="openCalc(5)">계산하기 →</button></article>
-    <article class="card c7"><div class="num">07</div><h2>중개보수</h2><p>거래금액과 중개보수율을 입력해 예상 중개보수를 확인합니다.</p><button onclick="openCalc(6)">계산하기 →</button></article>
-    <article class="card c8"><div class="num">08</div><h2>재산세</h2><p>과세표준과 세율을 입력해 단순 재산세를 계산합니다.</p><button onclick="openCalc(7)">계산하기 →</button></article>
-    <article class="card c9"><div class="num">09</div><h2>청약 자금계획</h2><p>분양가와 계약금·중도금·잔금 비율별 필요 자금을 확인합니다.</p><button onclick="openCalc(8)">계산하기 →</button></article>
-    <article class="card c10"><div class="num">10</div><h2>월 상환금</h2><p>대출금액·금리·기간을 입력해 원리금균등 월 상환액을 계산합니다.</p><button onclick="openCalc(9)">계산하기 →</button></article>
-  </section>
-  <div class="guide">
-    <b>입력 단위 안내</b><span>금액은 모두 <strong>만원</strong> 단위입니다.</span><span>금리·비율은 <strong>%</strong> 단위입니다.</span>
-  </div>
-  <p class="notice">※ 계산 결과는 참고용입니다. 실제 세금·대출한도·중개보수 등은 주택 수, 지역, 금융기관 심사 및 최신 법령에 따라 달라질 수 있습니다.</p>
-</main>
-
-<div id="modal" class="modal" aria-hidden="true">
- <div class="modal-box">
-  <button class="x" onclick="closeCalc()" aria-label="닫기">×</button>
-  <div class="modal-top"><span id="modalNum"></span><h2 id="modalTitle"></h2></div>
-  <div id="form"></div>
-  <button class="calc" onclick="calculate()">계산하기</button>
-  <div id="result" class="result">입력값을 확인하고 계산해 주세요.</div>
- </div>
-</div>
-<script src="script.js?v=20261007"></script>
-</body>
-</html>
+<header class="hero"><div class="eyebrow">REAL ESTATE FINANCE</div><h1>부동산 계산기 <b>10종</b></h1><p>매매·전세·대출·세금에 필요한 금액을 한곳에서 계산하세요.</p></header>
+<main class="container"><section class="grid" id="cards"></section>
+<div class="unit-guide"><b>입력 단위</b> 금액 <strong>만원</strong> · 금리/비율 <strong>%</strong> · 기간 <strong>년</strong></div>
+<p class="notice">※ 계산 결과는 참고용입니다. 실제 적용은 최신 법령·금융기관 심사·개별 조건에 따라 달라질 수 있습니다.</p></main>
+<div id="modal" class="modal" aria-hidden="true"><div class="modal-card"><button class="close" onclick="closeCalc()">×</button>
+<div class="modal-title"><span id="modalNo"></span><h2 id="modalTitle"></h2></div><div id="formArea"></div><button class="calc-btn" onclick="calculate()">계산하기</button><div id="result" class="result">입력값을 확인하고 계산해 주세요.</div></div></div>
+<script src="script.js?v=4"></script></body></html>

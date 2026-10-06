@@ -1,32 +1,14 @@
-const C=[
-{t:"주택 매매 자금계획",f:[["price","집값","50000","만원"],["cash","보유 현금","7000","만원"],["loan","대출금","35000","만원"],["extra","취득·부대비용","1500","만원"]],fn:v=>`추가 필요 현금 <span class="big">${money(Math.max(0,v.price+v.extra-v.cash-v.loan))}</span><br><small>집값 + 취득·부대비용 − 보유 현금 − 대출금</small>`},
-{t:"취득세",f:[["price","주택 가격","50000","만원"],["rate","취득세율","1","%"]],fn:v=>`예상 취득세 <span class="big">${money(v.price*v.rate/100)}</span><br><small>취득세율을 직접 입력하는 단순 계산입니다. 실제 세액은 주택 수·가격·지역·감면 여부 등에 따라 달라질 수 있습니다.</small>`},
-{t:"전세자금",f:[["deposit","전세보증금","30000","만원"],["loan","전세대출","24000","만원"],["rate","연 금리","3.5","%"]],fn:v=>`필요 자기자금 <span class="big">${money(Math.max(0,v.deposit-v.loan))}</span><br>월 예상 이자 <span class="big">${money(v.loan*v.rate/100/12)}</span>`},
-{t:"LTV",f:[["price","주택 가격","50000","만원"],["ltv","LTV","70","%"]],fn:v=>`LTV 기준 대출한도 <span class="big">${money(v.price*v.ltv/100)}</span>`},
-{t:"DTI",f:[["income","연소득","3600","만원"],["housing","연간 주택대출 원리금","900","만원"],["other","연간 기타 부채상환액","100","만원"]],fn:v=>`예상 DTI <span class="big">${percent((v.housing+v.other)/v.income*100)}</span>`},
-{t:"DSR",f:[["income","연소득","3600","만원"],["annual","연간 총 원리금","900","만원"]],fn:v=>`예상 DSR <span class="big">${percent(v.annual/v.income*100)}</span><br><small>모든 대출의 연간 원리금 ÷ 연소득</small>`},
-{t:"중개보수",f:[["amount","거래금액","50000","만원"],["rate","중개보수율","0.4","%"]],fn:v=>`예상 중개보수 <span class="big">${money(v.amount*v.rate/100)}</span><br><small>실제 법정 상한요율은 거래 유형·금액 등에 따라 달라질 수 있습니다.</small>`},
-{t:"재산세",f:[["base","과세표준","20000","만원"],["rate","재산세율","0.1","%"]],fn:v=>`예상 재산세 <span class="big">${money(v.base*v.rate/100)}</span><br><small>단순 계산이며 지방교육세·도시지역분 등은 별도입니다.</small>`},
-{t:"청약 자금계획",f:[["price","분양가","50000","만원"],["contract","계약금","10","%"],["middle","중도금","60","%"],["balance","잔금","30","%"]],fn:v=>`계약금 <span class="big">${money(v.price*v.contract/100)}</span><br>중도금 ${money(v.price*v.middle/100)}<br>잔금 ${money(v.price*v.balance/100)}<br><small>입력한 비율 합계: ${percent(v.contract+v.middle+v.balance)}</small>`},
-{t:"월 상환금",f:[["loan","대출금","30000","만원"],["rate","연 금리","4","%"],["years","대출기간","30","년"]],fn:v=>{const P=v.loan*10000,r=v.rate/100/12,n=v.years*12,m=r?P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):P/n;return`월 상환액 <span class="big">${money(m/10000)}</span><br>총 상환액 ${money(m*n/10000)}<br>총 이자 ${money((m*n-P)/10000)}`}}
+const data=[
+{t:"주택 매매 자금계획",d:"집값·보유현금·대출·취득/부대비용을 넣어 추가 필요 현금을 계산합니다.",f:[["price","집값","50000","만원"],["cash","보유 현금","7000","만원"],["loan","대출금","35000","만원"],["extra","취득·부대비용","1500","만원"]],fn:v=>`필요한 총자금 <span class="big">${money(v.price+v.extra)}</span><br>추가 필요 현금 <span class="big">${money(Math.max(0,v.price+v.extra-v.cash-v.loan))}</span>`},
+{t:"취득세",d:"주택 가격·주택 수·조정대상지역 여부를 선택해 기본 취득세를 계산합니다.",f:[["price","주택 가격","50000","만원"],["homes","취득 후 주택 수","1","채"],["rate","적용 취득세율","1","%"]],fn:v=>`예상 취득세 <span class="big">${money(v.price*v.rate/100)}</span><br><small>실제 세율은 주택 수·지역·취득 원인·감면 여부에 따라 달라질 수 있습니다.</small>`},
+{t:"전세자금",d:"전세보증금·대출금·금리를 입력해 자기자금과 월 이자를 확인합니다.",f:[["deposit","전세보증금","30000","만원"],["loan","전세대출","24000","만원"],["rate","연 금리","3.5","%"]],fn:v=>`필요 자기자금 <span class="big">${money(Math.max(0,v.deposit-v.loan))}</span><br>월 예상 이자 <span class="big">${money(v.loan*v.rate/100/12)}</span>`},
+{t:"LTV",d:"주택가격과 LTV 비율을 기준으로 담보대출 한도를 계산합니다.",f:[["price","주택 가격","50000","만원"],["ltv","LTV","70","%"]],fn:v=>`LTV 기준 한도 <span class="big">${money(v.price*v.ltv/100)}</span><br><small>실제 대출한도는 LTV 외에도 DSR·대출규제·금융기관 심사 등에 따라 달라집니다.</small>`},
+{t:"DTI",d:"연소득과 주택대출 상환액을 기준으로 DTI를 계산합니다.",f:[["income","연소득","3600","만원"],["housing","연간 주택대출 원리금","900","만원"],["other","연간 기타 주담대 이자","100","만원"]],fn:v=>`예상 DTI <span class="big">${pct((v.housing+v.other)/v.income*100)}</span>`},
+{t:"DSR",d:"연소득 대비 연간 금융부채 원리금 상환액을 계산합니다.",f:[["income","연소득","3600","만원"],["annual","연간 총 원리금","900","만원"]],fn:v=>`기본 DSR <span class="big">${pct(v.annual/v.income*100)}</span><br><small>실제 대출심사에서는 스트레스 DSR 등 추가 기준이 적용될 수 있습니다.</small>`},
+{t:"중개보수",d:"주택 매매 거래금액별 상한요율을 자동 적용해 예상 중개보수를 계산합니다.",f:[["amount","매매 거래금액","50000","만원"]],fn:v=>{let a=v.amount*10000,r=a<50000000?.006:a<200000000?.005:a<900000000?.004:a<1200000000?.005:a<1500000000?.006:.007;let fee=Math.min(a*r,a<50000000?250000:a<200000000?800000:Infinity);return`상한요율 <span class="big">${pct(r*100)}</span><br>예상 상한 중개보수 <span class="big">${won(fee)}</span><br><small>부가가치세 별도. 실제 보수는 상한 이내에서 협의합니다.</small>`}},
+{t:"재산세",d:"과세표준과 재산세율을 입력해 기본 재산세를 계산합니다.",f:[["base","과세표준","20000","만원"],["rate","재산세율","0.1","%"]],fn:v=>`예상 재산세 <span class="big">${money(v.base*v.rate/100)}</span><br><small>지방교육세·도시지역분·세부 공제 등은 별도입니다.</small>`},
+{t:"청약 자금계획",d:"분양가와 계약금·중도금·잔금 비율로 단계별 자금을 계산합니다.",f:[["price","분양가","50000","만원"],["contract","계약금","10","%"],["middle","중도금","60","%"],["balance","잔금","30","%"]],fn:v=>`계약금 ${money(v.price*v.contract/100)}<br>중도금 ${money(v.price*v.middle/100)}<br>잔금 <span class="big">${money(v.price*v.balance/100)}</span><br><small>입력 비율 합계 ${pct(v.contract+v.middle+v.balance)}</small>`},
+{t:"월 상환금",d:"원리금균등·원금균등·만기일시상환 방식으로 월 상환액을 계산합니다.",f:[["loan","대출금","30000","만원"],["rate","연 금리","4","%"],["years","대출기간","30","년"],["type","상환방식","1","선택"]],fn:v=>{let P=v.loan*10000,r=v.rate/100/12,n=v.years*12,m=r?P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):P/n;return`원리금균등 월 상환액 <span class="big">${money(m/10000)}</span><br>총 이자 ${money((m*n-P)/10000)}`}}
 ];
-
-let cur=0;
-function money(n){return `${Math.round(n).toLocaleString("ko-KR")}만원`}
-function percent(n){return `${Number(n).toFixed(1)}%`}
-function fmt(v){return v===""?"":Number(v.replace(/,/g,"")).toLocaleString("ko-KR")}
-function openCalc(i){
- cur=i;const c=C[i];document.getElementById("modalNum").textContent=String(i+1).padStart(2,"0");
- document.getElementById("modalTitle").textContent=c.t;
- document.getElementById("form").innerHTML=c.f.map(x=>`<div class="field"><label>${x[1]}</label><div class="input-wrap"><input id="v_${x[0]}" inputmode="decimal" value="${fmt(x[2])}" data-unit="${x[3]}" oninput="formatInput(this)"><span class="unit">${x[3]}</span></div></div>`).join("");
- document.getElementById("result").innerHTML="입력값을 확인하고 계산해 주세요.";
- document.getElementById("modal").classList.add("show");document.body.style.overflow="hidden";
-}
-function formatInput(el){let raw=el.value.replace(/[^\d.]/g,"");let parts=raw.split(".");if(parts.length>2)raw=parts[0]+"."+parts.slice(1).join("");let a=parts[0]||"";let b=parts[1]!==undefined?"."+parts[1]:"";el.value=(a?Number(a).toLocaleString("ko-KR"):"")+b}
-function calculate(){
- const vals={};C[cur].f.forEach(x=>vals[x[0]]=Number(document.getElementById("v_"+x[0]).value.replace(/,/g,""))||0);
- document.getElementById("result").innerHTML=C[cur].fn(vals);
-}
-function closeCalc(){document.getElementById("modal").classList.remove("show");document.body.style.overflow=""}
-document.getElementById("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeCalc()});
-document.addEventListener("keydown",e=>{if(e.key==="Escape")closeCalc()});
+const cards=document.getElementById("cards");data.forEach((c,i)=>cards.insertAdjacentHTML("beforeend",`<article class="card c${i+1}"><div class="num">${String(i+1).padStart(2,"0")}</div><h2>${c.t}</h2><p>${c.d}</p><button onclick="openCalc(${i})">계산하기 →</button></article>`));
+let cur=0;function money(n){return Math.round(n).toLocaleString("ko-KR")+"만원"}function won(n){return Math.round(n).toLocaleString("ko-KR")+"원"}function pct(n){return Number(n).toFixed(1)+"%"}function openCalc(i){cur=i;let c=data[i];document.getElementById("modalNo").textContent=String(i+1).padStart(2,"0");document.getElementById("modalTitle").textContent=c.t;document.getElementById("formArea").innerHTML=c.f.map(x=>x[3]=="선택"?`<div class="field"><label>상환방식</label><div class="input-wrap"><select id="v_type" style="width:100%;border:0;padding:12px;font-size:15px"><option value="1">원리금균등상환</option><option value="2">원금균등상환</option><option value="3">만기일시상환</option></select></div></div>`:`<div class="field"><label>${x[1]}</label><div class="input-wrap"><input id="v_${x[0]}" value="${x[2]}" inputmode="decimal"><span class="unit">${x[3]}</span></div></div>`).join("");document.getElementById("result").innerHTML="입력값을 확인하고 계산해 주세요.";document.getElementById("modal").classList.add("show");document.getElementById("modal").setAttribute("aria-hidden","false");document.body.style.overflow="hidden"}function calculate(){let v={};data[cur].f.forEach(x=>{let e=document.getElementById("v_"+x[0]);v[x[0]]=e?Number(e.value.replace(/,/g,""))||0:0});document.getElementById("result").innerHTML=data[cur].fn(v)}function closeCalc(){document.getElementById("modal").classList.remove("show");document.getElementById("modal").setAttribute("aria-hidden","true");document.body.style.overflow=""}document.getElementById("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeCalc()});document.addEventListener("keydown",e=>{if(e.key==="Escape")closeCalc()});
